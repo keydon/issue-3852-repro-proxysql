@@ -1,0 +1,33 @@
+version: "3.5"
+
+services:
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3307:3306
+
+  proxysql:
+    image: configured-proxysql
+    build:
+      context: ./proxysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+
+  spring-client-builder:
+    image: sample-app-builder
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    build:
+      context: ./spring-boot-client
+
+  spring-client-runner:
+    image: sample-app:latest
+
+
